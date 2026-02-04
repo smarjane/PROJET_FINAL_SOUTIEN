@@ -11,6 +11,7 @@ func Server() {
 	http.HandleFunc("/inscription", Inscription)
 	http.HandleFunc("/login", Connexion)
 	http.HandleFunc("/setInfo", SetInfoHandler)
+	http.HandleFunc("/setconnect", SetConnexion)
 
 	fmt.Println("Server lancé sur : localhost 8080")
 	http.ListenAndServe(":8080", nil)

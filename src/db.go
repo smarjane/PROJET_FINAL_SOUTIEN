@@ -63,7 +63,3 @@ func InsertValue(user string, pseudo string) int {
 	return int(id)
 
 }
-
-/*func ReadValue(){
-	rows, err := db.Query(`SELECT username, pseudo FROM users`)
-}*/

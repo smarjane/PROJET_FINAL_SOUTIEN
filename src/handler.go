@@ -1,6 +1,7 @@
 package Projet
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -35,21 +36,13 @@ func Connexion(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl.Execute(w, nil)
-
-	http.Redirect(w, r, "/", http.StatusFound)
-
-}
-
-type Cookie struct {
-	Name  string
-	Value string
 }
 
 func SetInfoHandler(w http.ResponseWriter, r *http.Request) {
 	pseudo := r.FormValue("pseudo")
 	nom := r.FormValue("nom")
 
-	id := InsertValue(nom, pseudo)
+	id := InsertValue(nom, pseudo) //inscription
 
 	cookie := &http.Cookie{
 		Name:  "user",
@@ -58,4 +51,29 @@ func SetInfoHandler(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, cookie)
 
 	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+func SetConnexion(w http.ResponseWriter, r *http.Request) {
+
+	rows, err := db.Query(`SELECT username, pseudo FROM users`)
+
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var pseudo string
+		var username string
+		err := rows.Scan(&pseudo, &username)
+
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(pseudo, username)
+	}
+}
+
+func Comparaison() {
+
 }
