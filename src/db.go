@@ -63,3 +63,20 @@ func InsertValue(user string, pseudo string) int {
 	return int(id)
 
 }
+
+func GetUserByPseudo(pseudo string) (int, string, error) {
+	InitDB()
+	defer db.Close()
+
+	var id int
+	var username string
+
+	query := `SELECT id, username FROM users WHERE pseudo = ?` //emplacement vide go remplit par la valeur
+	err := db.QueryRow(query, pseudo).Scan(&id, &username)
+
+	if err != nil {
+		return 0, "", err
+	}
+
+	return id, username, nil
+}

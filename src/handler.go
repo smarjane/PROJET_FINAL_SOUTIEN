@@ -38,7 +38,7 @@ func Connexion(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
-func SetInfoHandler(w http.ResponseWriter, r *http.Request) {
+func SetInscription(w http.ResponseWriter, r *http.Request) {
 	pseudo := r.FormValue("pseudo")
 	nom := r.FormValue("nom")
 
@@ -55,25 +55,33 @@ func SetInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 func SetConnexion(w http.ResponseWriter, r *http.Request) {
 
-	rows, err := db.Query(`SELECT username, pseudo FROM users`)
+	pseudo := r.FormValue("pseudo")
 
+	id, username, err := GetUserByPseudo(pseudo) //gestion d'erreur si pa de connextion par le pseudo
 	if err != nil {
-		panic(err)
+		http.Error(w, "incorrect or inexistant", http.StatusFound)
+		return
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var pseudo string
-		var username string
-		err := rows.Scan(&pseudo, &username)
-
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(pseudo, username)
+	cookie := &http.Cookie{ //si ok on creer le cookie
+		Name:  "user",
+		Value: strconv.Itoa(id),
 	}
+	http.SetCookie(w, cookie)
+
+	fmt.Println("connexion réussie", username)
+
+	http.Redirect(w, r, "/", http.StatusFound)
+
 }
 
-func Comparaison() {
+func Logout(w http.ResponseWriter, r *http.Request) {
+	cookie := &http.Cookie{
+		Name:   "user",
+		Value:  "",
+		MaxAge: -1, // supprime cookie
+	}
+	http.SetCookie(w, cookie)
 
+	http.Redirect(w, r, "/connexion", http.StatusFound)
 }
