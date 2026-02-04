@@ -2,6 +2,7 @@ package Projet
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -14,15 +15,15 @@ func InitDB() {
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
-	CreateDB()
 }
 
 func CreateDB() {
+	InitDB()
 	createTableusers := `
 	CREATE TABLE IF NOT EXISTS users(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		username TEXT
+		username TEXT,
+		pseudo TEXT
 	);
 	`
 	_, err := db.Exec(createTableusers)
@@ -43,4 +44,26 @@ func CreateDB() {
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 }
+
+func InsertValue(user string, pseudo string) int {
+	InitDB()
+	insertQuery := `INSERT INTO users(username, pseudo) VALUES(?, ?)`
+	res, err := db.Exec(insertQuery, user, pseudo)
+
+	if err != nil {
+		panic(err)
+	}
+
+	id, _ := res.LastInsertId()
+	fmt.Println(id)
+
+	defer db.Close()
+	return int(id)
+
+}
+
+/*func ReadValue(){
+	rows, err := db.Query(`SELECT username, pseudo FROM users`)
+}*/

@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -34,6 +35,9 @@ func Connexion(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl.Execute(w, nil)
+
+	http.Redirect(w, r, "/", http.StatusFound)
+
 }
 
 type Cookie struct {
@@ -42,12 +46,16 @@ type Cookie struct {
 }
 
 func SetInfoHandler(w http.ResponseWriter, r *http.Request) {
-
 	pseudo := r.FormValue("pseudo")
+	nom := r.FormValue("nom")
+
+	id := InsertValue(nom, pseudo)
 
 	cookie := &http.Cookie{
-		Name:  "Pseudo",
-		Value: pseudo,
+		Name:  "user",
+		Value: strconv.Itoa(id),
 	}
 	http.SetCookie(w, cookie)
+
+	http.Redirect(w, r, "/", http.StatusFound)
 }
