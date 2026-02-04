@@ -17,7 +17,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func Inscription(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("inscription.html")
+	tmpl, err := template.ParseFiles("pages/inscription.html")
 
 	if err != nil {
 		log.Fatal(err)
@@ -27,7 +27,7 @@ func Inscription(w http.ResponseWriter, r *http.Request) {
 }
 
 func Connexion(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("connexion.html")
+	tmpl, err := template.ParseFiles("pages/connexion.html")
 
 	if err != nil {
 		log.Fatal(err)
