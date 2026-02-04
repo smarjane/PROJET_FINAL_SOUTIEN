@@ -36,6 +36,7 @@ func Connexion(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl.Execute(w, nil)
+
 }
 
 func SetInscription(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +60,7 @@ func SetConnexion(w http.ResponseWriter, r *http.Request) {
 
 	id, username, err := GetUserByPseudo(pseudo) //gestion d'erreur si pa de connextion par le pseudo
 	if err != nil {
-		http.Error(w, "incorrect or inexistant", http.StatusFound)
+		http.Redirect(w, r, "/", http.StatusFound) //renvoie de /login si user pas connecter
 		return
 	}
 
