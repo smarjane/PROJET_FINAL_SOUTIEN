@@ -1,12 +1,28 @@
 package Projet
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"strconv"
 )
+
+func LoadGames() ([]Game, error) {
+	resp, err := http.Get("https://www.freetogame.com/api/games")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+	var data []Game
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("index.html")
@@ -84,5 +100,19 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, cookie)
 
-	http.Redirect(w, r, "/connexion", http.StatusFound)
+	http.Redirect(w, r, "/login", http.StatusFound)
+}
+
+func PlayerHandler(w http.ResponseWriter, r *http.Request) {
+
+	games, err := LoadGames()
+
+	tmpl, err := template.ParseFiles("pages/collection.html", "pages/templates/data.html")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tmpl.Execute(w, games)
+
 }

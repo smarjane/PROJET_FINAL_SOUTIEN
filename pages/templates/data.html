@@ -1,0 +1,9 @@
+{{ define "data" }}
+{{ range .}}
+<div class="games">
+    <p> {{ .Title }}</p>
+    <p> {{ .ShortDescription }}</p>
+    <p> {{ .Genre }}</p>
+</div>
+{{end}}
+{{end}}
